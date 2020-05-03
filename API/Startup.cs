@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Core.Interfaces;
 using AutoMapper;
 using API.Helpers;
+using API.Extensions;
+using API.Middleware;
 
 namespace API
 {
@@ -33,9 +35,11 @@ namespace API
             services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddControllers();
-            services.AddDbContext<StoreContext>(i => {
-                i.UseSqlite(_configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddDbContext<StoreContext>(i => 
+                i.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddApplicationServices();
+            services.AddSwaggerDocumentation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,12 +50,16 @@ namespace API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseStaticFiles();
 
             app.UseAuthorization();
+            app.UseSwaggerDocumention();
 
             app.UseEndpoints(endpoints =>
             {
