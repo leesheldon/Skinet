@@ -8,3 +8,4 @@ appsettings.json
 /node_modules
 /.pnp
 .pnp.js
+*.rdb
