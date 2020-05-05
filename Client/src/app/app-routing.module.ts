@@ -9,6 +9,4 @@ const routes: Routes = [];
 })
 export class AppRoutingModule { }
 
-/*
-cmd line in Terminal to generate app-routing.module.ts file => ng generate module app-routing --flat --module=app
-*/
+
