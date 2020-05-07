@@ -82,6 +82,5 @@ namespace Infrastructure.Data
                 logger.LogError(ex.Message);
             }
         }
-        
     }
 }

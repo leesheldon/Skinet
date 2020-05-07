@@ -19,6 +19,6 @@ namespace Infrastructure.Data.Config
                     o => (OrderStatus) Enum.Parse(typeof(OrderStatus), o)
                 );
         }
-        
+
     }
 }

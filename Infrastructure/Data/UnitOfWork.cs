@@ -10,7 +10,6 @@ namespace Infrastructure.Data
     {
         private readonly StoreContext _context;
         private Hashtable _repositories;
-
         public UnitOfWork(StoreContext context)
         {
             _context = context;
@@ -42,6 +41,6 @@ namespace Infrastructure.Data
 
             return (IGenericRepository<TEntity>) _repositories[type];
         }
-
+        
     }
 }
