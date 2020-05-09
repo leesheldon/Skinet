@@ -19,6 +19,8 @@ using API.Extensions;
 using API.Middleware;
 using StackExchange.Redis;
 using Infrastructure.Identity;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
 
 namespace API
 {
@@ -80,18 +82,25 @@ namespace API
 
             app.UseRouting();
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Content")
+                ), RequestPath = "/content"
+            });
+            
             app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSwaggerDocumention();
-
             
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
+
     }
 }
