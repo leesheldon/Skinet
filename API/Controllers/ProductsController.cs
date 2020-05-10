@@ -17,10 +17,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {
     public class ProductsController : BaseApiController
-    {
-        private readonly IGenericRepository<Product> _productsRepo;
-        private readonly IGenericRepository<ProductBrand> _productBrandRepo;
-        private readonly IGenericRepository<ProductType> _productTypeRepo;
+    {        
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -98,6 +95,7 @@ namespace API.Controllers
         public async Task<ActionResult<Product>> UpdateProduct(int id, ProductCreateDto productToUpdate)
         {
             var product = await _unitOfWork.Repository<Product>().GetByIdAsync(id);
+            productToUpdate.PictureUrl = product.PictureUrl;
 
             _mapper.Map(productToUpdate, product);
 
