@@ -79,8 +79,7 @@ namespace API.Controllers
         public async Task<ActionResult<Product>> CreateProduct(ProductCreateDto productToCreate)
         {
             var product = _mapper.Map<ProductCreateDto, Product>(productToCreate);
-            product.PictureUrl = "images/products/placeholder.png";
-
+            
             _unitOfWork.Repository<Product>().Add(product);
 
             var result = await _unitOfWork.Complete();
@@ -95,7 +94,6 @@ namespace API.Controllers
         public async Task<ActionResult<Product>> UpdateProduct(int id, ProductCreateDto productToUpdate)
         {
             var product = await _unitOfWork.Repository<Product>().GetByIdAsync(id);
-            productToUpdate.PictureUrl = product.PictureUrl;
 
             _mapper.Map(productToUpdate, product);
 

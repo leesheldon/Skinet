@@ -13,7 +13,6 @@ namespace Infrastructure.Services
         private readonly IBasketRepository _basketRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPaymentService _paymentService;
-
         public OrderService(IBasketRepository basketRepo, IUnitOfWork unitOfWork, IPaymentService paymentService)
         {
             _paymentService = paymentService;
@@ -31,7 +30,8 @@ namespace Infrastructure.Services
             foreach (var item in basket.Items)
             {
                 var productItem = await _unitOfWork.Repository<Product>().GetByIdAsync(item.Id);
-                var itemOrdered = new ProductItemOrdered(productItem.Id, productItem.Name, productItem.PictureUrl);
+                var itemOrdered = new ProductItemOrdered(productItem.Id, productItem.Name, 
+                    productItem.Photos.FirstOrDefault(x => x.IsMain)?.PictureUrl);
                 var orderItem = new OrderItem(itemOrdered, productItem.Price, item.Quantity);
                 items.Add(orderItem);
             }
@@ -83,6 +83,6 @@ namespace Infrastructure.Services
 
             return await _unitOfWork.Repository<Order>().ListAsync(spec);
         }
-
+        
     }
 }
