@@ -36,7 +36,8 @@ export class AdminComponent implements OnInit {
     if (params.pageNumber !== event) {
       params.pageNumber = event;
       this.shopService.setShopParams(params);
-      this.getProducts(true);
+      // this.getProducts(true);
+      this.getProducts(false);
     }
   }
 
