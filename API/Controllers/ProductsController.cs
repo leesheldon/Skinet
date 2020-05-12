@@ -48,7 +48,7 @@ namespace API.Controllers
             return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex, productParams.PageSize, totalItems, data));
         }
 
-        //[Cached(600)]
+        [Cached(600)]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
@@ -112,7 +112,16 @@ namespace API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
-            var product = await _unitOfWork.Repository<Product>().GetByIdAsync(id);
+            var spec = new ProductsWithTypesAndBrandsSpecification(id);
+            var product = await _unitOfWork.Repository<Product>().GetEntityWithSpec(spec);
+
+            foreach (var photo in product.Photos)
+            {
+                if (photo.Id > 18)
+                {
+                    _photoService.DeleteFromDisk(photo);
+                }
+            }
             
             _unitOfWork.Repository<Product>().Delete(product);
 
